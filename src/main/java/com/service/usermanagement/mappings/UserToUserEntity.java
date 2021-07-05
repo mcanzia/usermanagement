@@ -14,6 +14,7 @@ public class UserToUserEntity implements Converter<User, UserEntity> {
         userEntity.setFirstName(user.getFirstName());
         userEntity.setLastName(user.getLastName());
         userEntity.setEmail(user.getEmail());
+        userEntity.setRole(user.getRole());
         return userEntity;
     }
 }

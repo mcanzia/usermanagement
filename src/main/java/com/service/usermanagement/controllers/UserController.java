@@ -18,15 +18,13 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    // RESTful API methods for Retrieval operations
-    //@CrossOrigin(origins = "http://localhost:8081")
     @GetMapping("/users")
     public List<User> list() {
         return service.listAll();
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> get(@PathVariable Integer id) {
+    public ResponseEntity<User> get(@PathVariable Long id) {
         try {
             User user = service.get(id);
             return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -35,7 +33,6 @@ public class UserController {
         }
     }
 
-    // RESTful API method for Create operation
     @PostMapping("/users")
     public void add(@RequestBody User user) throws DuplicateUserException {
         service.saveOrUpdate(user);
@@ -43,7 +40,7 @@ public class UserController {
 
     // RESTful API method for Update operation
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> update(@PathVariable Integer id, @RequestBody User user) throws BadHttpRequest, DuplicateUserException {
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) throws BadHttpRequest, DuplicateUserException {
         try {
             User updateUser = service.get(id);
             updateUser.setFirstName(user.getFirstName());
@@ -59,7 +56,7 @@ public class UserController {
 
     // RESTful API method for Delete operation
     @DeleteMapping("/users/{id}")
-    public String delete(@PathVariable Integer id) {
+    public String delete(@PathVariable Long id) {
         service.delete(id);
         return "Deleted User Id - " + id;
     }

@@ -47,7 +47,7 @@ public class UserService {
         }
     }
 
-    public User get(Integer id) {
+    public User get(Long id) {
         UserEntity userEntity = repo.findById(id).get();
         if (userEntity == null) {
             throw new UserNotFoundException("User not found.");
@@ -66,7 +66,7 @@ public class UserService {
 
     }
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         try {
             repo.deleteById(id);
         }catch (EmptyResultDataAccessException e){
