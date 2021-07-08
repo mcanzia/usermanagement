@@ -16,6 +16,10 @@ public class UserEntityToUser implements Converter<UserEntity, User> {
         user.setLastName(userEntity.getLastName());
         user.setEmail(userEntity.getEmail());
         user.setRole(userEntity.getRole());
+        if (userEntity.getGroupEntity() != null) {
+            user.setGroupId(userEntity.getGroupEntity().getId());
+            user.setGroupName(userEntity.getGroupEntity().getName());
+        }
         return user;
     }
 }

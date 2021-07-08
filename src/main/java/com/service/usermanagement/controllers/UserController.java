@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,6 +22,15 @@ public class UserController {
     @GetMapping("/users")
     public List<User> list() {
         return service.listAll();
+    }
+
+    @GetMapping("/users/unassigned")
+    public List<User> listUnassigned() {
+        List<User> userList = new ArrayList<User>();
+        userList = service.listAll();
+        userList.removeIf(user -> user.getGroupId() != null);
+        System.out.println(userList);
+        return userList;
     }
 
     @GetMapping("/users/{id}")
@@ -46,6 +56,8 @@ public class UserController {
             updateUser.setFirstName(user.getFirstName());
             updateUser.setLastName(user.getLastName());
             updateUser.setEmail(user.getEmail());
+            updateUser.setRole(user.getRole());
+            updateUser.setGroupId(user.getGroupId());
             final User responseUser = service.saveOrUpdate(updateUser);
             return new ResponseEntity<User>(responseUser, HttpStatus.OK);
         } catch (NoSuchElementException e) {
@@ -64,5 +76,11 @@ public class UserController {
     @GetMapping("/users/email")
     public User findByEmail(@RequestParam(value = "email")String email) {
         return service.getByEmail(email);
+    }
+
+    @GetMapping("/users/group/{groupId}")
+    public List<User> findByGroup(@RequestParam(value = "groupId")Long groupId) {
+        System.out.println("here in controller");
+        return service.getByGroup(groupId);
     }
 }

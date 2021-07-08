@@ -1,6 +1,8 @@
 package com.service.usermanagement.mappings;
 
+import com.service.usermanagement.entities.GroupEntity;
 import com.service.usermanagement.entities.UserEntity;
+import com.service.usermanagement.models.Group;
 import com.service.usermanagement.models.User;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,12 @@ public class UserToUserEntity implements Converter<User, UserEntity> {
         userEntity.setLastName(user.getLastName());
         userEntity.setEmail(user.getEmail());
         userEntity.setRole(user.getRole());
+        if (user.getGroupId() != -1) {
+            GroupEntity groupEntity = new GroupEntity();
+            groupEntity.setId(user.getGroupId());
+            groupEntity.setName(user.getGroupName());
+            userEntity.setGroupEntity(groupEntity);
+        }
         return userEntity;
     }
 }

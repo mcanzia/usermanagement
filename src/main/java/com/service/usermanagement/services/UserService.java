@@ -66,6 +66,20 @@ public class UserService {
 
     }
 
+    public List<User> getByGroup(Long groupId) {
+        List<UserEntity> userEntities = repo.findByGroup(groupId);
+        if (userEntities == null || userEntities.isEmpty()) {
+            throw new UserNotFoundException("User not found.");
+        }
+        System.out.println("get by group: " + userEntities);
+        List<User> users = new ArrayList<User>();
+        for (UserEntity ue : userEntities) {
+            users.add(userEntityToUser.convert(ue));
+        }
+        return users;
+
+    }
+
     public void delete(Long id) {
         try {
             repo.deleteById(id);

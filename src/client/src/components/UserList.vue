@@ -2,6 +2,7 @@
   <div class="list row">
     <div class="col-md-6">
       <h4>User List</h4>
+      <AddUser></AddUser>
       <ul class="list-group">
         <li class="list-group-item"
             :class="{ active: index == currentIndex }"
@@ -30,6 +31,9 @@
         <div>
           <label><strong>Role:</strong></label> {{ currentUser.role }}
         </div>
+        <div>
+          <label><strong>Group Name:</strong></label> {{ currentUser.groupName }}
+        </div>
         <br />
         <div>
           <button class="btn btn-sm btn-danger" @click="removeSelectedUser">
@@ -48,15 +52,16 @@
 
 <script>
 import UserDataService from "@/services/UserDataService";
+import AddUser from "@/components/AddUser";
 
 export default {
   name: "user-list",
+  components: {AddUser},
   data() {
     return {
       users: [],
       currentUser: null,
       currentIndex: -1,
-      name: ""
     };
   },
   methods: {
@@ -99,6 +104,9 @@ export default {
   },
   mounted() {
     this.retrieveUsers();
+    this.emitter.on("refresh-userlist-users", () => {
+      this.retrieveUsers();
+    });
   }
 }
 </script>

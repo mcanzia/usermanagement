@@ -3,6 +3,9 @@ class UserDataService {
     getAll() {
         return http.get("/users");
     }
+    getUnassigned() {
+        return http.get("/users/unassigned")
+    }
     get(id) {
         return http.get(`/users/${id}`);
     }

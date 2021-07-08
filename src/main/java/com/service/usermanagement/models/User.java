@@ -7,16 +7,20 @@ public class User {
     private String lastName;
     private String email;
     private String role;
+    private Long groupId;
+    private String groupName;
 
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String email, String role) {
+    public User(Long id, String firstName, String lastName, String email, String role, Long groupId, String groupName) {
         this.setId(id);
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setEmail(email);
         this.setRole(role);
+        this.setGroupId(id);
+        this.setGroupName(groupName);
     }
 
     public Long getId() {
@@ -55,4 +59,19 @@ public class User {
 
     public void setRole(String role) { this.role = role; }
 
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 }

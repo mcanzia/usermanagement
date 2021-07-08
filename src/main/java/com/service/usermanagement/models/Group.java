@@ -1,9 +1,12 @@
 package com.service.usermanagement.models;
 
+import java.util.List;
+
 public class Group {
 
     private Long id;
     private String name;
+    private List<User> userList;
 
     public Group() {
 
@@ -28,5 +31,13 @@ public class Group {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 }

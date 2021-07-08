@@ -2,12 +2,7 @@ package com.service.usermanagement.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="users")
@@ -30,6 +25,10 @@ public class UserEntity implements Serializable {
 
     @Column(name="role",nullable = false)
     private String role;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", referencedColumnName = "group_id")
+    private GroupEntity groupEntity;
 
     public UserEntity() {
 
@@ -73,6 +72,14 @@ public class UserEntity implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public GroupEntity getGroupEntity() {
+        return groupEntity;
+    }
+
+    public void setGroupEntity(GroupEntity groupEntity) {
+        this.groupEntity = groupEntity;
     }
 }
 
