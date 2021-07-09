@@ -17,67 +17,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional
 public class UserService {
+
     @Autowired
     private UserRepository repo;
-    @Autowired
-    private UserEntityToUser userEntityToUser;
-    @Autowired
-    private UserToUserEntity userToUserEntity;
 
     public List<User> listAll() {
-        List<UserEntity> userEntities = new ArrayList<UserEntity>();
-        repo.findAll().iterator().forEachRemaining(userEntities::add);
-        List<User> users = new ArrayList<User>();
-        for(UserEntity userEntity : userEntities){
-            User user = userEntityToUser.convert(userEntity);
-            users.add(user);
-        }
-
-        return users;
+        return repo.findAll();
     }
 
-    public User saveOrUpdate(User user) throws DuplicateUserException {
+    public User get(Long id) {
+        User user = repo.findById(id);
+        if (user == null) {
+            throw new UserNotFoundException("User not found.");
+        }
+        return user;
+    }
+
+    public void insert(User user) throws DuplicateUserException {
         try {
-            UserEntity userEntity = userToUserEntity.convert(user);
-            return userEntityToUser.convert(repo.save(userEntity));
+            repo.insert(user);
         }catch (DataIntegrityViolationException e){
             throw new DuplicateUserException("User name already exists.");
         }
     }
 
-    public User get(Long id) {
-        UserEntity userEntity = repo.findById(id).get();
-        if (userEntity == null) {
-            throw new UserNotFoundException("User not found.");
+    public void update(User user) throws DuplicateUserException {
+        try {
+            repo.update(user);
+        }catch (DataIntegrityViolationException e){
+            //throw new DuplicateUserException("User name already exists.");
+            System.out.println(e.getMessage());
         }
-        return userEntityToUser.convert(userEntity);
-
-    }
-
-    public User getByEmail(String email) {
-        UserEntity userEntity = repo.findByEmail(email);
-        if (userEntity == null) {
-            throw new UserNotFoundException("User not found.");
-        }
-        System.out.println("get by email: " + userEntity);
-        return userEntityToUser.convert(userEntity);
-
-    }
-
-    public List<User> getByGroup(Long groupId) {
-        List<UserEntity> userEntities = repo.findByGroup(groupId);
-        if (userEntities == null || userEntities.isEmpty()) {
-            throw new UserNotFoundException("User not found.");
-        }
-        System.out.println("get by group: " + userEntities);
-        List<User> users = new ArrayList<User>();
-        for (UserEntity ue : userEntities) {
-            users.add(userEntityToUser.convert(ue));
-        }
-        return users;
-
     }
 
     public void delete(Long id) {

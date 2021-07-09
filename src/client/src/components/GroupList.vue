@@ -190,7 +190,7 @@ export default {
           lastName: this.currentUser.lastName,
           role: this.currentUser.role,
           email: this.currentUser.email,
-          groupId: -1
+          groupId: null
         };
         UserDataService.update(this.currentUser.id, updateUser)
             .then(response => {
