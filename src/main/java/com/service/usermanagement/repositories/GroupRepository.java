@@ -1,10 +1,9 @@
 package com.service.usermanagement.repositories;
 
-import com.service.usermanagement.entities.GroupEntity;
 import com.service.usermanagement.models.Group;
+import com.service.usermanagement.models.Role;
 import com.service.usermanagement.models.User;
 import org.apache.ibatis.annotations.*;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
@@ -34,7 +33,6 @@ public interface GroupRepository {
             @Result(property = "groupId", column = "group_id"),
     })
     List<User> selectUsers(String group_Id);
-
 
     @Insert("INSERT INTO user_groups(group_name) VALUES (#{name})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="group_id")

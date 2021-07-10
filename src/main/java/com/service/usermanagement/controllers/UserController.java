@@ -2,19 +2,17 @@ package com.service.usermanagement.controllers;
 
 import com.service.usermanagement.exceptions.DuplicateUserException;
 import com.service.usermanagement.exceptions.UserNotFoundException;
-import com.service.usermanagement.mappings.UserMapper;
 import com.service.usermanagement.models.User;
-import com.service.usermanagement.repositories.UserRepository;
 import com.service.usermanagement.services.UserService;
 import org.apache.ibatis.javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 public class UserController {
@@ -23,6 +21,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/users")
+    //@PreAuthorize("hasRole('ADMIN')")
     public List<User> getAll() {
         return userService.listAll();
     }
@@ -64,6 +63,7 @@ public class UserController {
                 updateUser.setFirstName(user.getFirstName());
                 updateUser.setLastName(user.getLastName());
                 updateUser.setEmail(user.getEmail());
+                updateUser.setPassword(user.getPassword());
                 updateUser.setRole(user.getRole());
                 updateUser.setGroupId(user.getGroupId());
                 userService.update(updateUser);

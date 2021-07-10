@@ -18,16 +18,15 @@
           <input type="text" class="form-control" id="userLastNameForm" v-model="newUser.lastName" placeholder="Enter Last Name here..">
           <label for="userEmailForm" class="form-label text-left">Email</label>
           <input type="text" class="form-control" id="userEmailForm" v-model="newUser.email" placeholder="name@example.com">
-          <label for="roleDataList" class="form-label text-left">Role</label>
-          <input class="form-control" list="roleOptions" id="roleDataList" v-model="newUser.role" placeholder="Type to search...">
-          <datalist id="roleOptions">
-            <option value="admin" />
-            <option value="basic" />
-          </datalist>
+          <label for="roleOptions" class="form-label text-left">Role</label>
+          <select class="form-select" id="roleOptions" v-model="newUser.role">
+            <option value="ADMIN">Admin</option>
+            <option value="BASIC">Basic</option>
+          </select>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" @click="addNewUser(user)" data-bs-dismiss="modal">Save changes</button>
+          <button type="button" class="btn btn-primary" @click="addNewUser" data-bs-dismiss="modal">Save changes</button>
         </div>
       </div>
     </div>

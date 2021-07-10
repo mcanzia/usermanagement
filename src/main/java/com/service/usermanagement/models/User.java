@@ -7,6 +7,7 @@ public class User {
     private String lastName;
     private String email;
     private String role;
+    private String password;
     private Long groupId;
     private String groupName;
 
@@ -57,7 +58,9 @@ public class User {
 
     public String getRole() { return role; }
 
-    public void setRole(String role) { this.role = role; }
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public Long getGroupId() {
         return groupId;
@@ -73,5 +76,13 @@ public class User {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

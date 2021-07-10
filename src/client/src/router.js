@@ -15,6 +15,11 @@ const routes =  [
         path: "/groups",
         name: "group-details",
         component: () => import("./components/GroupList")
+    },
+    {
+        path: "/register",
+        name: "register",
+        component: () => import("./components/Register")
     }
 ];
 const router = createRouter({

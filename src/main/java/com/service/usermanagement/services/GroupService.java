@@ -1,14 +1,8 @@
 package com.service.usermanagement.services;
 
-import com.service.usermanagement.entities.GroupEntity;
 import com.service.usermanagement.exceptions.DuplicateGroupException;
-import com.service.usermanagement.exceptions.DuplicateUserException;
 import com.service.usermanagement.exceptions.GroupNotFoundException;
-import com.service.usermanagement.exceptions.UserNotFoundException;
-import com.service.usermanagement.mappings.GroupEntityToGroup;
-import com.service.usermanagement.mappings.GroupToGroupEntity;
 import com.service.usermanagement.models.Group;
-import com.service.usermanagement.models.User;
 import com.service.usermanagement.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,7 +10,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
