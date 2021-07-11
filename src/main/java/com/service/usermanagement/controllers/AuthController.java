@@ -16,23 +16,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Service controller to handle authentication requests for registration and logging in users
+ * @author Michael Canziani
+ */
 @RestController
 @RequestMapping(path = "/api")
 public class AuthController {
 
+    /** Authentication manager used to validate authentication of user details */
     @Autowired
     private AuthenticationManager authenticationManager;
+    /** Service used to retrieve security details of user based on username/email */
     @Autowired
     private SecurityDetailsService securityDetailsService;
+    /** User service used to retrieve specified users from database */
     @Autowired
     private UserService userService;
+    /** JWT utility class used for generating security access token */
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    /** Used for encrypting passwords */
     @Autowired
     PasswordEncoder encoder;
 
+    /**
+     * Auth Controller method for registering user with application
+     * @param signUpRequest registering user request details
+     * @return response status of callout
+     */
     @PostMapping("/auth/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody AuthRequest signUpRequest) {
 
         try {
             // Find if existing already
@@ -52,6 +66,11 @@ public class AuthController {
 
     }
 
+    /**
+     * Auth Controller method for signing in existing user to application
+     * @param authRequest logging in user request details
+     * @return response status of callout
+     */
     @PostMapping("/auth/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
         try {
@@ -69,6 +88,11 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token, loggedInUser));
     }
 
+    /**
+     * Auth controller method for retrieving logged in User from DB by username
+     * @param username logged in username
+     * @return currently logged in User record
+     */
     @GetMapping("/auth/{username}")
     public User getLoggedInUser(@PathVariable String username)  {
         return userService.getByUsername(username);

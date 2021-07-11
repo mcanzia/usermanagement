@@ -25,31 +25,62 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Configuration
-@EnableWebSecurity
+/**
+ * Configures Spring security for Spring application and enables features like token creation and filtering
+ * @author Michael Canziani
+ */
 @EnableGlobalMethodSecurity(
         jsr250Enabled = true, // Enables @RolesAllowed annotation.
         prePostEnabled = true // Enables @PreAuthorize, @PostAuthorize, @PreFilter, @PostFilter annotations.
 )
+@Configuration
+@EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    /** Used for retrieving security details about a user like email/password */
     private SecurityDetailsService securityDetailsService;
-
-    @Autowired
+    /** Used for security token creation and validation */
     private JwtTokenFilter jwtTokenFilter;
 
+    /**
+     * Constructor for WebSecurityConfiguration, declares dependencies for Spring to inject
+     * @param securityDetailsService
+     * @param jwtTokenFilter
+     */
+    public WebSecurityConfiguration(SecurityDetailsService securityDetailsService, JwtTokenFilter jwtTokenFilter) {
+        this.securityDetailsService = securityDetailsService;
+        this.jwtTokenFilter = jwtTokenFilter;
+    }
+
+    /**
+     * Creates Spring bean for authentication manager class
+     * @return bean instance of authentication manager
+     * @throws Exception if error occurs during creation
+     */
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
+    /**
+     * Builds authentication manager using security user details
+     * @param auth authentication manager
+     * @throws Exception if error occurs during configuration
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(securityDetailsService);
     }
 
+    /**
+     * Configures multiple aspects of the application security:
+     * Disables CSRF, Sets session management to stateless, Sets exception handler for unauthorized requests
+     * Allows you to specify which HTTP requests you want to permit
+     * Sets JWT token filter ahead of UsernamePasswordAuthenticationFilter in filter chain
+     * @param http
+     * @throws Exception if error occurs during configuration
+     */
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // Disable CSRF
@@ -71,12 +102,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         );
     }
 
+    /**
+     * Used to encode passwords with encryption algorithm
+     * @return PasswordEncoder instance
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Used by spring security if CORS is enabled.
+    /**
+     * Used by Spring security if CORS is enabled, allows requests through CORS if matching pattern below
+     * @return configurer instance
+     */
     @Bean
     public WebMvcConfigurer corsFilter() {
         return new WebMvcConfigurer() {

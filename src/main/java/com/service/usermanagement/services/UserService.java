@@ -11,16 +11,39 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class for User controller, acts as middleman between Controller and Repository/DAO classes
+ * @author Michael Canziani
+ */
 @Service
 public class UserService {
 
-    @Autowired
+    /** User DAO repository which interacts directly with database*/
     private UserRepository repo;
 
+    /**
+     * Constructor for UserService, defines dependencies for UserRepository to be injected
+     * @param repo
+     */
+    public UserService(UserRepository repo) {
+        this.repo = repo;
+    }
+
+    /**
+     * Receives request from list() method in UserController
+     * and sends request to repo to interact with database
+     * @return response from repo with list of User records
+     */
     public List<User> listAll() {
         return repo.findAll();
     }
 
+    /**
+     * Receives request from get() method in User controller
+     * and sends request to repo to interact with database
+     * @param id user id to retrieve from database
+     * @return response from repo with requested User record
+     */
     public User get(Long id) {
         User user = repo.findById(id);
         if (user == null) {
@@ -29,6 +52,11 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Receives request from add() method in User controller
+     * and sends request to repo to interact with database
+     * @param user user record to add to database
+     */
     public void insert(User user) throws DuplicateUserException {
         try {
             repo.insert(user);
@@ -37,6 +65,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Receives request from update() method in User controller
+     * and sends request to repo to interact with database
+     * @param user user record to update in database
+     */
     public void update(User user) throws DuplicateUserException {
         try {
             repo.update(user);
@@ -46,6 +79,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Receives request from register() method in User controller
+     * and sends request to repo to interact with database
+     * @param user user record to update in database
+     */
     public void registerUser(User user) {
         try {
             repo.registerUser(user);
@@ -55,6 +93,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Receives request from delete() method in User controller
+     * and sends request to repo to interact with database
+     * @param id user record to remove from database
+     */
     public void delete(Long id) {
         try {
             repo.deleteById(id);
@@ -63,6 +106,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Receives request from getUserByUsername() method in SecurityDetails controller
+     * and sends request to repo to interact with database
+     * @param email email of user to retrieve
+     * @return User record from database
+     */
     public User getByUsername(String email) {
         User user = repo.findByUsername(email);
         if (user == null) {

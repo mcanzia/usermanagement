@@ -5,30 +5,49 @@ import com.service.usermanagement.exceptions.UserNotFoundException;
 import com.service.usermanagement.models.User;
 import com.service.usermanagement.services.UserService;
 import org.apache.ibatis.javassist.tools.web.BadHttpRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service controller to handle CRUD operations with respect to User object
+ * @author Michael Canziani
+ */
 @RestController
 public class UserController {
 
-    @Autowired
+    /** Used to perform user configuration between Controller and Repository classes*/
     private UserService userService;
-    @Autowired
-    PasswordEncoder encoder;
+    /** Used to encrypt passwords for users */
+    private PasswordEncoder encoder;
 
+    /**
+     * Constructor for UserController, defines UserService and PasswordEncoder injections
+     * @param userService dependency to be injected by UserService
+     * @param encoder dependency to be injected by PasswordEncoder
+     */
+    public UserController(UserService userService, PasswordEncoder encoder) {
+        this.userService = userService;
+        this.encoder = encoder;
+    }
+
+    /**
+     * Retrieve all User records from database
+     * @return list of User records from database
+     */
     @GetMapping("/users")
-    //@PreAuthorize("hasRole('ADMIN')")
     public List<User> getAll() {
         return userService.listAll();
     }
 
+    /**
+     * Retrieve all users not currently assigned to a group from database
+     * @return list of unassigned users from database
+     */
     @GetMapping("/users/unassigned")
     public List<User> listUnassigned() {
         List<User> userList = new ArrayList<User>();
@@ -38,6 +57,11 @@ public class UserController {
         return userList;
     }
 
+    /**
+     * Retrieve specific User from database based on id
+     * @param id of user to return
+     * @return single user from database and success status of callout
+     */
     @GetMapping("/users/{id}")
     public ResponseEntity<User> get(@PathVariable Long id) {
         try {
@@ -48,6 +72,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Create new User record in database
+     * @param user details of user to be created
+     * @return success status of callout
+     * @throws DuplicateUserException if user with identical email already exists in database
+     */
     @PostMapping("/users")
     public ResponseEntity<User> add(@RequestBody User user) throws DuplicateUserException {
         try {
@@ -59,6 +89,15 @@ public class UserController {
         }
     }
 
+    /**
+     * Update User record in database
+     * Used most often for adding/removing user records from groups
+     * @param id selected user to update
+     * @param user new details to apply to user record
+     * @return success status of callout
+     * @throws BadHttpRequest if error occurs during HTTP handling
+     * @throws DuplicateUserException if user email is updated to match existing user's in database
+     */
     @PutMapping("/users/{id}")
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) throws BadHttpRequest, DuplicateUserException {
         try {
@@ -79,6 +118,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Delete user record in database based on id
+     * @param id id of selected user to be deleted
+     * @return success status of callout
+     */
     @DeleteMapping("/users/{id}")
     public ResponseEntity<User> delete(@PathVariable Long id) {
         try {

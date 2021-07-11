@@ -16,17 +16,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Service controller to handle CRUD operations with respect to Group object
+ * @author Michael Canziani
+ */
 @RestController
 public class GroupController {
 
+    /** Used to perform group configuration between Controller and Repository classes*/
     @Autowired
     private GroupService groupService;
 
+    /**
+     * Retrieves list of all user_groups from database
+     * @return all user_groups
+     */
     @GetMapping("/groups")
     public List<Group> list() {
         return groupService.listAll();
     }
 
+    /**
+     * Retrieves single Group from database based on id
+     * @param id id of selected group
+     * @return single group matching provided id
+     */
     @GetMapping("/groups/{id}")
     public ResponseEntity<Group> get(@PathVariable Long id) {
         try {
@@ -37,7 +51,12 @@ public class GroupController {
         }
     }
 
-    // RESTful API method for Create operation
+    /**
+     * Adds new Group record to database
+     * @param group group record to add
+     * @return response status of callout
+     * @throws DuplicateGroupException if existing group with duplicate name exists
+     */
     @PostMapping("/groups")
     public ResponseEntity<Group> add(@RequestBody Group group) throws DuplicateGroupException {
         try {
@@ -48,7 +67,14 @@ public class GroupController {
         }
     }
 
-    // RESTful API method for Update operation
+    /**
+     * Updates Group in database with given id based on new values provided
+     * @param id select group in db
+     * @param group updates to select group values
+     * @return response status of callout
+     * @throws BadHttpRequest if error occurs with HTTP callout
+     * @throws DuplicateGroupException if group name is updated to match an already existing group record
+     */
     @PutMapping("/groups/{id}")
     public ResponseEntity<Group> update(@PathVariable Long id, @RequestBody Group group) throws BadHttpRequest, DuplicateGroupException {
         try {
@@ -61,7 +87,11 @@ public class GroupController {
         }
     }
 
-    // RESTful API method for Delete operation
+    /**
+     * Delete group record from db based on id
+     * @param id id of group to be deleted
+     * @return response status of callout
+     */
     @DeleteMapping("/groups/{id}")
     public ResponseEntity<Group> delete(@PathVariable Long id) {
         try {
