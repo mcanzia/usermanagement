@@ -27,13 +27,13 @@
             <br />
             <label for="roleOptions" class="form-label text-left">Role</label>
             <select class="form-select" name="role" id="roleOptions" v-model="userRole">
-              <option value="ADMIN">Admin</option>
+              <option v-if="isAdmin" value="ADMIN">Admin</option>
               <option value="BASIC">Basic</option>
             </select>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" @click="addNewUser" data-bs-dismiss="modal">Save changes</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-outline-primary" @click="addNewUser" data-bs-dismiss="modal">Save changes</button>
           </div>
         </Form>
       </div>
@@ -62,6 +62,14 @@ export default {
     return {
       newUserSchema,
       userRole: "",
+    }
+  },
+  computed: {
+    isAdmin() {
+      if (this.$store.state.authCurrentUser) {
+        return this.$store.state.authCurrentUser.user.role === "ADMIN";
+      }
+      return false;
     }
   },
   methods: {
@@ -96,7 +104,7 @@ export default {
               });
             });
       }
-    }
+    },
   }
 }
 </script>

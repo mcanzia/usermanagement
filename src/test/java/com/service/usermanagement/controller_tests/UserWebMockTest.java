@@ -22,6 +22,9 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
@@ -46,6 +49,46 @@ public class UserWebMockTest {
                 .andExpect(status().isOk())
                 .andExpect((ResultMatcher) jsonPath("$", hasSize(2)))
                 .andExpect((ResultMatcher) jsonPath("$[0].email", is(userOne.getEmail())));
+
+    }
+
+    @Test
+    public void getUserByIdShouldReturnUserFromService() throws Exception {
+        User userOne = new User(1L, "David", "Test", "david.test@gmail.com","ADMIN",1L,"Test Group");
+
+        when(service.get(1L)).thenReturn(userOne);
+
+        this.mockMvc.perform(get("/users/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.email", is(userOne.getEmail())));
+
+    }
+
+    @Test
+    public void getUnassignedUsersShouldReturnUsersFromService() throws Exception {
+        User userOne = new User(1L, "David", "Test", "david.test@gmail.com","ADMIN",1L,"Test Group");
+        User userUnassigned = new User(1L, "Unassigned", "Soumya", "unassigned.soumya@gmail.com","ADMIN",null,null);
+        List<User> allUsers = Arrays.asList(userOne, userUnassigned);
+
+        when(service.listAll()).thenReturn(allUsers);
+
+
+        this.mockMvc.perform(get("/users/unassigned")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$", hasSize(1)))
+                .andExpect((ResultMatcher) jsonPath("$[0].email", is(userUnassigned.getEmail())));
+
+    }
+
+    @Test
+    public void addUserShouldReturnSuccessfulResponse() throws Exception {
+        User userOne = new User(1L, "David", "Test", "david.test@gmail.com","ADMIN",1L,"Test Group");
+
+        this.mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
     }
 }

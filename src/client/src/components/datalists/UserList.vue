@@ -64,6 +64,20 @@ export default {
       currentIndex: -1,
     };
   },
+  computed: {
+    isAdmin() {
+      if (this.$store.state.authCurrentUser) {
+        return this.$store.state.authCurrentUser.user.role === "ADMIN";
+      }
+      return false;
+    },
+    authUserName() {
+      if (this.$store.state.authCurrentUser) {
+        return this.$store.state.authCurrentUser.user.email;
+      }
+      return null;
+    },
+  },
   methods: {
     retrieveUsers() {
       UserDataService.getAll()
@@ -91,25 +105,42 @@ export default {
       this.currentIndex = user ? index : -1;
     },
 
+    userNameMatch(selectedUser) {
+      return this.authUserName === selectedUser.email;
+    },
+
     removeSelectedUser() {
       if (this.currentUser != null) {
-        console.log(this.currentUser.id);
-        UserDataService.delete(this.currentUser.id)
-            .then(response => {
-              console.log(response.data);
-              this.refreshList();
-              this.emitter.emit("displayAlert", {
-                type: 'alert-success',
-                message: 'Successfully removed user'
-              });
-            })
-            .catch(e => {
-              console.log(e);
-              this.emitter.emit("displayAlert", {
-                type: 'alert-danger',
-                message: 'Failed to remove user'
-              });
+        if(this.currentUser.role === "ADMIN" && !this.isAdmin) {
+            this.emitter.emit("displayAlert", {
+              type: 'alert-danger',
+              message: 'Cannot delete admin user'
             });
+        } else {
+          if (!this.userNameMatch(this.currentUser)) {
+            UserDataService.delete(this.currentUser.id)
+                .then(response => {
+                  console.log(response.data);
+                  this.refreshList();
+                  this.emitter.emit("displayAlert", {
+                    type: 'alert-success',
+                    message: 'Successfully removed user'
+                  });
+                })
+                .catch(e => {
+                  console.log(e);
+                  this.emitter.emit("displayAlert", {
+                    type: 'alert-danger',
+                    message: 'Failed to remove user'
+                  });
+                });
+          } else {
+            this.emitter.emit("displayAlert", {
+              type: 'alert-danger',
+              message: 'Cannot delete your own user'
+            });
+        }
+        }
       }
     },
 

@@ -17,8 +17,8 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" @click="addNewGroup(newGroupName)" data-bs-dismiss="modal">Save changes</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline-primary" @click="addNewGroup(newGroupName)" data-bs-dismiss="modal">Save changes</button>
         </div>
       </div>
     </div>
