@@ -39,6 +39,10 @@ export default {
           })
           .catch(e => {
             console.log(e);
+            this.emitter.emit("displayAlert", {
+              type: 'alert-danger',
+              message: 'Failed to retrieve users'
+            });
           });
     },
 
