@@ -11,23 +11,31 @@
           <h5 class="modal-title" id="addUserModalLabel">New User</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <label for="userFirstNameForm" class="form-label text-left">First Name</label>
-          <input type="text" class="form-control" id="userFirstNameForm" v-model="newUser.firstName" placeholder="Enter First Name here..">
-          <label for="userLastNameForm" class="form-label text-left">Last Name</label>
-          <input type="text" class="form-control" id="userLastNameForm" v-model="newUser.lastName" placeholder="Enter Last Name here..">
-          <label for="userEmailForm" class="form-label text-left">Email</label>
-          <input type="text" class="form-control" id="userEmailForm" v-model="newUser.email" placeholder="name@example.com">
-          <label for="roleOptions" class="form-label text-left">Role</label>
-          <select class="form-select" id="roleOptions" v-model="newUser.role">
-            <option value="ADMIN">Admin</option>
-            <option value="BASIC">Basic</option>
-          </select>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" @click="addNewUser" data-bs-dismiss="modal">Save changes</button>
-        </div>
+        <Form @submit="addNewUser" :validation-schema="newUserSchema">
+          <div class="modal-body">
+            <label for="userFirstNameForm" class="form-label text-left">First Name</label>
+            <Field type="text" class="form-control" name="firstName" id="userFirstNameForm" placeholder="Enter First Name here.." />
+            <ErrorMessage name="firstName" class="error-text"/>
+            <br />
+            <label for="userLastNameForm" class="form-label text-left">Last Name</label>
+            <Field type="text" class="form-control" name="lastName" id="userLastNameForm" placeholder="Enter Last Name here.." />
+            <ErrorMessage name="lastName" class="error-text"/>
+            <br />
+            <label for="userEmailForm" class="form-label text-left">Email</label>
+            <Field type="text" class="form-control" name="email" id="userEmailForm" placeholder="name@example.com" />
+            <ErrorMessage name="email" class="error-text"/>
+            <br />
+            <label for="roleOptions" class="form-label text-left">Role</label>
+            <select class="form-select" name="role" id="roleOptions" v-model="userRole">
+              <option value="ADMIN">Admin</option>
+              <option value="BASIC">Basic</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" @click="addNewUser" data-bs-dismiss="modal">Save changes</button>
+          </div>
+        </Form>
       </div>
     </div>
   </div>
@@ -35,22 +43,35 @@
 
 <script>
 import UserDataService from "@/services/UserDataService";
+import { Field, Form, ErrorMessage } from 'vee-validate';
+import * as yup from "yup";
 
 export default {
   name: "AddUser",
+  components: {
+    Field,
+    Form,
+    ErrorMessage
+  },
   data() {
+    const newUserSchema = yup.object({
+      firstName: yup.string().required('First Name required').max(100),
+      lastName: yup.string().required('Last Name required').max(100),
+      email: yup.string().required('Email required').email().max(100),
+    });
     return {
-      newUser: {},
+      newUserSchema,
+      userRole: "",
     }
   },
   methods: {
-    addNewUser() {
-      if (this.newUser != null) {
+    addNewUser(newUser) {
+      if (newUser != null) {
         const createUser = {
-          firstName: this.newUser.firstName,
-          lastName: this.newUser.lastName,
-          email: this.newUser.email,
-          role: this.newUser.role,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
+          email: newUser.email,
+          role: this.userRole,
           groupId: -1,
           groupName: null
         }
@@ -81,5 +102,8 @@ export default {
 </script>
 
 <style scoped>
-
+  .error-text {
+    font-size: 15px;
+    color: red;
+  }
 </style>

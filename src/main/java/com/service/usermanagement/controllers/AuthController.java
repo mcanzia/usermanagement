@@ -46,7 +46,7 @@ public class AuthController {
                 return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
             }
 
-        } catch (DuplicateUserException e) {
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<User>(HttpStatus.CONFLICT);
         }
 

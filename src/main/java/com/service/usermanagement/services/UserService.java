@@ -41,17 +41,17 @@ public class UserService {
         try {
             repo.update(user);
         }catch (DataIntegrityViolationException e){
-            //throw new DuplicateUserException("User name already exists.");
             System.out.println(e.getMessage());
+            throw new DuplicateUserException("User name already exists.");
         }
     }
 
-    public void registerUser(User user) throws DuplicateUserException {
+    public void registerUser(User user) {
         try {
             repo.registerUser(user);
         }catch (DataIntegrityViolationException e){
-            //throw new DuplicateUserException("User name already exists.");
             System.out.println(e.getMessage());
+            throw new IllegalArgumentException("Registration failed");
         }
     }
 
