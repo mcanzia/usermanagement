@@ -1,4 +1,4 @@
-import http from "../http-common";
+import http from "./http-common";
 class GroupDataService {
     getAll() {
         return http.get("/groups");

@@ -64,7 +64,9 @@ public class AuthController {
 
         final UserDetails userDetails = securityDetailsService.loadUserByUsername(authRequest.getEmail());
         final String token = jwtTokenUtil.generateAccessToken(userDetails);
-        return ResponseEntity.ok(new AuthResponse(token));
+        final User loggedInUser = getLoggedInUser(authRequest.getEmail());
+
+        return ResponseEntity.ok(new AuthResponse(token, loggedInUser));
     }
 
     @GetMapping("/auth/{username}")

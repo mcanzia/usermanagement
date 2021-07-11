@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    PasswordEncoder encoder;
 
     @GetMapping("/users")
     //@PreAuthorize("hasRole('ADMIN')")
@@ -48,6 +51,7 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<User> add(@RequestBody User user) throws DuplicateUserException {
         try {
+            user.setPassword(encoder.encode(Math.random() + ""));
             userService.insert(user);
             return new ResponseEntity<User>(HttpStatus.CREATED);
         } catch (DuplicateUserException e) {

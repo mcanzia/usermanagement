@@ -1,27 +1,26 @@
-import http from "../http-common";
+import axios from "axios";
+
+const BASE_URL = "http://localhost:8080"
+
 class AuthService {
 
     register(data) {
-        return http.post("/api/auth", data);
+        return axios.post(BASE_URL + "/api/auth/register", data);
     }
 
     login(data) {
-        return axios
-            .post(API_URL + 'login', {
-                username: user.username,
-                password: user.password
-            })
+        return axios.post(BASE_URL + '/api/auth/login', data)
             .then(response => {
-                if (response.data.accessToken) {
-                    localStorage.setItem('user', JSON.stringify(response.data));
+                if (response.data.token) {
+                    localStorage.setItem('authUser', JSON.stringify(response.data));
+                    console.log('localstorage: ' + JSON.parse(localStorage.getItem('authUser')));
                 }
-
                 return response.data;
             });
     }
 
     logout() {
-        localStorage.removeItem('user');
+        localStorage.removeItem('authUser');
     }
 }
 export default new AuthService();

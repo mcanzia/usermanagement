@@ -39,7 +39,7 @@ public interface UserRepository {
     })
     public User findByUsername(String email);
 
-    @Insert("INSERT INTO users(first_name,last_name,email,role_id) " +
+    @Insert("INSERT INTO users(first_name,last_name,email,role) " +
             "VALUES (#{firstName}, #{lastName}, #{email}, #{role})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     public void insert(User user);

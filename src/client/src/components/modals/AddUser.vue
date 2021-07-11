@@ -61,10 +61,18 @@ export default {
               this.newUser = {};
               // Refresh list on UserList component
               this.emitter.emit("refresh-userlist-users", "");
+              this.emitter.emit("displayAlert", {
+                type: 'alert-success',
+                message: 'Successfully created user'
+              });
             })
             .catch(e => {
               console.log(e);
               this.newUser = {};
+              this.emitter.emit("displayAlert", {
+                type: 'alert-danger',
+                message: 'Failed to create user'
+              });
             });
       }
     }

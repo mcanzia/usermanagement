@@ -52,7 +52,7 @@
 
 <script>
 import UserDataService from "@/services/UserDataService";
-import AddUser from "@/components/AddUser";
+import AddUser from "@/components/modals/AddUser";
 
 export default {
   name: "user-list",
@@ -73,6 +73,10 @@ export default {
           })
           .catch(e => {
             console.log(e);
+            this.emitter.emit("displayAlert", {
+              type: 'alert-danger',
+              message: 'Failed to retrieve users'
+            });
           });
     },
 
@@ -94,9 +98,17 @@ export default {
             .then(response => {
               console.log(response.data);
               this.refreshList();
+              this.emitter.emit("displayAlert", {
+                type: 'alert-success',
+                message: 'Successfully removed user'
+              });
             })
             .catch(e => {
               console.log(e);
+              this.emitter.emit("displayAlert", {
+                type: 'alert-danger',
+                message: 'Failed to remove user'
+              });
             });
       }
     },
