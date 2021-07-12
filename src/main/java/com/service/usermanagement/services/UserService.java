@@ -1,77 +1,123 @@
 package com.service.usermanagement.services;
 
-import com.service.usermanagement.entities.UserEntity;
 import com.service.usermanagement.exceptions.DuplicateUserException;
 import com.service.usermanagement.exceptions.UserNotFoundException;
-import com.service.usermanagement.mappings.UserEntityToUser;
-import com.service.usermanagement.mappings.UserToUserEntity;
 import com.service.usermanagement.models.User;
 import com.service.usermanagement.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service class for User controller, acts as middleman between Controller and Repository/DAO classes
+ * @author Michael Canziani
+ */
 @Service
-@Transactional
 public class UserService {
-    @Autowired
+
+    /** User DAO repository which interacts directly with database*/
     private UserRepository repo;
-    @Autowired
-    private UserEntityToUser userEntityToUser;
-    @Autowired
-    private UserToUserEntity userToUserEntity;
 
-    public List<User> listAll() {
-        List<UserEntity> userEntities = new ArrayList<UserEntity>();
-        repo.findAll().iterator().forEachRemaining(userEntities::add);
-        List<User> users = new ArrayList<User>();
-        for(UserEntity userEntity : userEntities){
-            User user = userEntityToUser.convert(userEntity);
-            users.add(user);
-        }
-
-        return users;
+    /**
+     * Constructor for UserService, defines dependencies for UserRepository to be injected
+     * @param repo
+     */
+    public UserService(UserRepository repo) {
+        this.repo = repo;
     }
 
-    public User saveOrUpdate(User user) throws DuplicateUserException {
+    /**
+     * Receives request from list() method in UserController
+     * and sends request to repo to interact with database
+     * @return response from repo with list of User records
+     */
+    public List<User> listAll() {
+        return repo.findAll();
+    }
+
+    /**
+     * Receives request from get() method in User controller
+     * and sends request to repo to interact with database
+     * @param id user id to retrieve from database
+     * @return response from repo with requested User record
+     */
+    public User get(Long id) {
+        User user = repo.findById(id);
+        if (user == null) {
+            throw new UserNotFoundException("User not found.");
+        }
+        return user;
+    }
+
+    /**
+     * Receives request from add() method in User controller
+     * and sends request to repo to interact with database
+     * @param user user record to add to database
+     */
+    public void insert(User user) throws DuplicateUserException {
         try {
-            UserEntity userEntity = userToUserEntity.convert(user);
-            return userEntityToUser.convert(repo.save(userEntity));
+            repo.insert(user);
         }catch (DataIntegrityViolationException e){
             throw new DuplicateUserException("User name already exists.");
         }
     }
 
-    public User get(Integer id) {
-        UserEntity userEntity = repo.findById(id).get();
-        if (userEntity == null) {
-            throw new UserNotFoundException("User not found.");
+    /**
+     * Receives request from update() method in User controller
+     * and sends request to repo to interact with database
+     * @param user user record to update in database
+     */
+    public void update(User user) throws DuplicateUserException {
+        try {
+            repo.update(user);
+        }catch (DataIntegrityViolationException e){
+            System.out.println(e.getMessage());
+            throw new DuplicateUserException("User name already exists.");
         }
-        return userEntityToUser.convert(userEntity);
-
     }
 
-    public User getByEmail(String email) {
-        UserEntity userEntity = repo.findByEmail(email);
-        if (userEntity == null) {
-            throw new UserNotFoundException("User not found.");
+    /**
+     * Receives request from register() method in User controller
+     * and sends request to repo to interact with database
+     * @param user user record to update in database
+     */
+    public void registerUser(User user) {
+        try {
+            repo.registerUser(user);
+        }catch (DataIntegrityViolationException e){
+            System.out.println(e.getMessage());
+            throw new IllegalArgumentException("Registration failed");
         }
-        System.out.println("get by email: " + userEntity);
-        return userEntityToUser.convert(userEntity);
-
     }
 
-    public void delete(Integer id) {
+    /**
+     * Receives request from delete() method in User controller
+     * and sends request to repo to interact with database
+     * @param id user record to remove from database
+     */
+    public void delete(Long id) {
         try {
             repo.deleteById(id);
         }catch (EmptyResultDataAccessException e){
             throw new UserNotFoundException("User was not found.");
         }
+    }
+
+    /**
+     * Receives request from getUserByUsername() method in SecurityDetails controller
+     * and sends request to repo to interact with database
+     * @param email email of user to retrieve
+     * @return User record from database
+     */
+    public User getByUsername(String email) {
+        User user = repo.findByUsername(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found.");
+        }
+        return user;
     }
 }
 
