@@ -51,7 +51,7 @@ public class JwtTokenUtil {
      * @return username of user trying to validate
      */
     public String getUsername(String token) {
-        return getClaims(token).getSubject().split(",")[1];
+        return getClaims(token).getSubject();
     }
 
     /**
