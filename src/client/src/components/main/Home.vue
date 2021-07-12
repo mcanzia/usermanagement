@@ -9,6 +9,7 @@
 <script>
 import UserList from "@/components/datalists/UserList";
 import Alert from "@/components/main/Alert";
+import authHeader from "@/services/auth-header";
 export default {
   name: "Home",
   components: {Alert, UserList},
@@ -20,6 +21,7 @@ export default {
   methods: {
   },
   mounted() {
+    console.log('authheader: ' + authHeader());
   }
 }
 </script>

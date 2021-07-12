@@ -50,8 +50,6 @@ export default {
   },
   methods: {
     submitUserLogin(loginUser) {
-      console.log(loginUser);
-
       this.$store.dispatch('login', loginUser).then(
           (data) => {
             this.message = data.message;

@@ -7,6 +7,7 @@ import com.service.usermanagement.services.UserService;
 import org.apache.ibatis.javassist.tools.web.BadHttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
