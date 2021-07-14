@@ -112,6 +112,7 @@ export default {
     removeSelectedUser() {
       if (this.currentUser != null) {
         if(this.currentUser.role === "ADMIN" && !this.isAdmin) {
+            console.log('test');
             this.emitter.emit("displayAlert", {
               type: 'alert-danger',
               message: 'Cannot delete admin user'

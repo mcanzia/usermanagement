@@ -86,7 +86,30 @@ public class UserWebMockTest {
     public void addUserShouldReturnSuccessfulResponse() throws Exception {
         User userOne = new User(1L, "David", "Test", "david.test@gmail.com","ADMIN",1L,"Test Group");
 
-        this.mockMvc.perform(post("/users")
+        this.mockMvc.perform(post("/users", userOne)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void updateUserShouldReturnSuccessfulResponse() throws Exception {
+        User userOne = new User(1L, "David", "Test", "david.test@gmail.com","ADMIN",1L,"Test Group");
+        User userUpdate = new User(1L, "David", "TestUpdate", "david.test@gmail.com","ADMIN",1L,"Test Group");
+
+        when(service.get(1L)).thenReturn(userOne);
+
+        this.mockMvc.perform(post("/users", 1L, userUpdate)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void deleteUserShouldReturnSuccessfulResponse() throws Exception {
+        User userDelete = new User(1L, "David", "Test", "david.test@gmail.com","ADMIN",1L,"Test Group");
+
+        this.mockMvc.perform(post("/users", 1L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

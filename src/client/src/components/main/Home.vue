@@ -2,6 +2,7 @@
   <div>
     <Alert></Alert>
     <h1>Hello {{ loggedInUsername }}</h1>
+    <hr>
     <UserList />
   </div>
 </template>

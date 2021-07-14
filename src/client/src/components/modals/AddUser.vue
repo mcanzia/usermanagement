@@ -54,7 +54,7 @@ export default {
     ErrorMessage
   },
   data() {
-    const newUserSchema = yup.object({
+    let newUserSchema = yup.object({
       firstName: yup.string().required('First Name required').max(100),
       lastName: yup.string().required('Last Name required').max(100),
       email: yup.string().required('Email required').email().max(100),
@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     addNewUser(newUser) {
-      if (newUser != null) {
+      if (newUser != null && this.userRole != null && this.userRole != '') {
         const createUser = {
           firstName: newUser.firstName,
           lastName: newUser.lastName,
@@ -87,7 +87,7 @@ export default {
         UserDataService.create(createUser)
             .then(response => {
               console.log(response.data);
-              this.newUser = {};
+              this.resetUserSchema();
               // Refresh list on UserList component
               this.emitter.emit("refresh-userlist-users", "");
               this.emitter.emit("displayAlert", {
@@ -97,14 +97,26 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.newUser = {};
+              this.resetUserSchema();
               this.emitter.emit("displayAlert", {
                 type: 'alert-danger',
                 message: 'Failed to create user'
               });
             });
+      } else {
+        this.emitter.emit("displayAlert", {
+          type: 'alert-danger',
+          message: 'Failed to create user. One of the fields was empty.'
+        });
       }
     },
+    resetUserSchema() {
+      this.newUserSchema.firstName = '';
+      this.newUserSchema.lastName = '';
+      this.newUserSchema.email = '';
+      this.userRole = '';
+
+    }
   }
 }
 </script>

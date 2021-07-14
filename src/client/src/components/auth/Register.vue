@@ -5,15 +5,15 @@
       <div class="card-body">
         <h5 class="card-title card-title-style">Register User</h5>
           <label for="registerEmailForm" class="form-label text-left">Email</label>
-          <Field type="text" class="form-control" name="email" id="registerEmailForm" placeholder="Enter Email here.." />
+          <Field type="text" class="form-control" name="email" id="registerEmailForm" placeholder="Enter email here..." />
           <ErrorMessage name="email" class="error-text"/>
           <br />
           <label for="registerPasswordForm" class="form-label text-left">Password</label>
-          <Field type="password" class="form-control" name="password" id="registerPasswordForm" />
+          <Field type="password" class="form-control" name="password" id="registerPasswordForm" placeholder="Enter password here..."/>
           <ErrorMessage name="password" class="error-text"/>
           <br />
           <label for="registerConfirmPasswordForm" class="form-label text-left">Confirm Password</label>
-          <Field type="password" class="form-control" name="confirmPassword" id="registerConfirmPasswordForm" />
+          <Field type="password" class="form-control" name="confirmPassword" id="registerConfirmPasswordForm" placeholder="Enter password here..."/>
           <ErrorMessage name="confirmPassword" class="error-text"/>
       </div>
       <div class="card-footer d-grid">

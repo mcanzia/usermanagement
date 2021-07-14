@@ -1,6 +1,6 @@
 <template>
   <div v-if="showAlert" :class="['alert', className]" role="alert" id="alert">
-    <button type="button" @click="closeAlert" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" @click="closeAlert" class="btn-close" aria-label="Close"></button>
     {{alertMessage}}
   </div>
 </template>
